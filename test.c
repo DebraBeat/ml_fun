@@ -268,15 +268,61 @@ static char* test_gj_elimination() {
     U->data[0][0] = 1.0; U->data[0][1] = 1.0; U->data[0][2] = 1.0;
     U->data[1][0] = 0.0; U->data[1][1] = 1.0; U->data[1][2] = 1.0;
     U->data[2][0] = 0.0; U->data[2][1] = 0.0; U->data[2][2] = 1.0;
-
     Matrix* A = gauss_jordan_elimination(U);
 
-    mu_assert("Results index[0][1] is wrong", is_close(A->data[0][1], 0.0));
-    mu_assert("Results index[0][2] is wrong", is_close(A->data[0][1], 0.0));
-    mu_assert("Results index[1][2] is wrong", is_close(A->data[0][1], 0.0));
+    mu_assert("T1: Results index[0][1] is wrong", is_close(A->data[0][1], 0.0));
+    mu_assert("T1: Results index[0][2] is wrong", is_close(A->data[0][2], 0.0));
+    mu_assert("T1: Results index[1][2] is wrong", is_close(A->data[1][2], 0.0));
+    mu_assert("T1: Results index[1][1] is wrong", is_close(A->data[0][0], 1.0));
+    mu_assert("T1: Results index[2][2] is wrong", is_close(A->data[1][1], 1.0));
+    mu_assert("T1: Results index[3][3] is wrong", is_close(A->data[2][2], 1.0));
 
-    free(U);
-    if (A) free(A);
+    if (A) free_matrix(A);
+
+    U->data[0][0] = 2.0; U->data[0][1] = 3.0; U->data[0][2] = 4.0;
+    U->data[1][0] = 0.0; U->data[1][1] = 4.0; U->data[1][2] = 5.0;
+    U->data[2][0] = 0.0; U->data[2][1] = 0.0; U->data[2][2] = 6.0;
+    A = gauss_jordan_elimination(U);
+
+    mu_assert("T2: Results index[0][1] is wrong", is_close(A->data[0][1], 0.0));
+    mu_assert("T2: Results index[0][2] is wrong", is_close(A->data[0][2], 0.0));
+    mu_assert("T2: Results index[1][2] is wrong", is_close(A->data[1][2], 0.0));
+    mu_assert("T2: Results index[0][0] is wrong", is_close(A->data[0][0], 1.0));
+    mu_assert("T2: Results index[1][1] is wrong", is_close(A->data[1][1], 1.0));
+    mu_assert("T2: Results index[2][2] is wrong", is_close(A->data[2][2], 1.0));
+
+    if (A) free_matrix(A);
+
+    U->data[0][0] = 2.0; U->data[0][1] = 3.0; U->data[0][2] = 4.0;
+    U->data[1][0] = 5.0; U->data[1][1] = 6.0; U->data[1][2] = 7.0;
+    U->data[2][0] = 8.0; U->data[2][1] = 9.0; U->data[2][2] = 10.0;
+    A = gauss_jordan_elimination(U);
+
+    mu_assert("T3: Results index[0][1] is wrong", is_close(A->data[0][1], 0.0));
+    mu_assert("T3: Results index[0][2] is wrong", is_close(A->data[0][2], -1.0));
+    mu_assert("T3: Results index[1][2] is wrong", is_close(A->data[1][2], 2.0));
+    mu_assert("T3: Results index[0][0] is wrong", is_close(A->data[0][0], 1.0));
+    mu_assert("T3: Results index[1][1] is wrong", is_close(A->data[1][1], 1.0));
+    mu_assert("T3: Results index[2][2] is wrong", is_close(A->data[2][2], 0.0));
+    if (A) free_matrix(A);
+
+    Matrix* V = create_empty_matrix(4, 3);
+    V->data[0][0] = 2.0; V->data[0][1] = 3.0; V->data[0][2] = 4.0;
+    V->data[1][0] = 5.0; V->data[1][1] = 6.0; V->data[1][2] = 7.0;
+    V->data[2][0] = 8.0; V->data[2][1] = 9.0; V->data[2][2] = 10.0;
+    V->data[3][0] = 8.0; V->data[3][1] = 9.0; V->data[3][2] = 10.0;
+    Matrix* B = gauss_jordan_elimination(V);
+
+    mu_assert("T4: Results index[0][1] is wrong", is_close(B->data[0][1], 0.0));
+    mu_assert("T4: Results index[0][2] is wrong", is_close(B->data[0][2], -1.0));
+    mu_assert("T4: Results index[1][2] is wrong", is_close(B->data[1][2], 2.0));
+    mu_assert("T4: Results index[0][0] is wrong", is_close(B->data[0][0], 1.0));
+    mu_assert("T4: Results index[1][1] is wrong", is_close(B->data[1][1], 1.0));
+    mu_assert("T4: Results index[2][2] is wrong", is_close(B->data[2][2], 0.0));
+    mu_assert("T4: Results index[3][2] is wrong", is_close(B->data[3][2], 0.0));
+ 
+    free_matrix(V);
+    if (B) free_matrix(B);
 
     return NULL;
 }

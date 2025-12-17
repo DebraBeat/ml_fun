@@ -12,7 +12,7 @@
 * DONE: Transpose
 * DONE: Matrix-Vector product
 * DONE: Matrix-Matrix product
-* Gaussian Elimination
+* DONE: Gaussian Elimination
 * Inverse
 * Pseudoinverse
 * QR decomposition
@@ -308,6 +308,13 @@ Matrix* matrix_product(Matrix* A, Matrix* B) {
     return C;
 }
 
+void swap_rows(Matrix* A, size_t row_1, size_t row_2) {
+    if (row_1 == row_2) return;
+
+    double* temp = A->data[row_1];
+    A->data[row_1] = A->data[row_2];
+    A->data[row_2] = temp;
+}
 /**
  * @brief Perform Gauss-Jordan Elimination on a given matrix A, putting it in
  * Reduced Row Echelon Form (RREF)
@@ -324,32 +331,40 @@ Matrix* gauss_jordan_elimination(Matrix* A) {
     size_t diagonal_len = MIN(R->rows, R->cols);
 
     // Work our way down the main diagonal. If the element in the current
-    // main diagonal is 0, increase curr to check the one below it
+    // main diagonal is 0, increase pivot to check the one below it
     for (size_t i = 0; i < diagonal_len; i++) {
-        size_t curr = i;
-        while (curr < R->rows && R->data[curr][i] == 0) {
-            curr++;
+        size_t pivot = i;
+        while (pivot < R->rows && R->data[pivot][i] == 0) {
+            pivot++;
         }
 
         // The current column has only zero values, so we move onto the
         // next diagonal element
-        if (curr == R->rows) {
+        if (pivot == R->rows) {
             continue;
         }
 
+        swap_rows(A, pivot, i);
+        pivot = i;
+
+        // Divide the current row by the value at the pivot cell
+        double pivot_val = R->data[i][i];
+        for (size_t j = 0; j < R->cols; j++) {
+            R->data[i][j] /= pivot_val;
+        }
         // Start at the top row, zeroing out the corresponding cell
         // If we're at the same row, skip it so we don't zero it out :)
         for (size_t j = 0; j < R->rows; j++) {
-            if (j == curr) {
-                continue;
-            }
+            if (j == i) continue;
 
             // Get the factor for zeroing out a row
-            double factor = R->data[curr][i] / R->data[j][i];
+            double factor = R->data[j][i];
 
+            
             for (size_t k = 0; k < R->cols; k++) {
-                R->data[curr][k] -= (factor * R->data[curr][k]);
+                R->data[j][k] -= (factor * R->data[i][k]);
             }
+
         }
     }
 

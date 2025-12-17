@@ -30,6 +30,12 @@ typedef struct Matrix {
     double** data;
 } Matrix;
 
+// Helper to compare doubles safely
+int is_close(double a, double b) {
+    return fabs(a - b) < 0.0001;
+}
+
+
 /**
  * @brief Create a matrix of size rows by columns
  * 
@@ -308,13 +314,24 @@ Matrix* matrix_product(Matrix* A, Matrix* B) {
     return C;
 }
 
+/**
+ * @brief Swap two rows in a matrix
+ * 
+ * @param A The matrix who will have it's rows swapped
+ * @param row_1 A row to swap with row_2
+ * @param row_2 A row to swap with row_1
+ * @return Matrix*
+ */
 void swap_rows(Matrix* A, size_t row_1, size_t row_2) {
-    if (row_1 == row_2) return;
+    if (row_1 == row_2) {
+        return;
+    }
 
     double* temp = A->data[row_1];
     A->data[row_1] = A->data[row_2];
     A->data[row_2] = temp;
 }
+
 /**
  * @brief Perform Gauss-Jordan Elimination on a given matrix A, putting it in
  * Reduced Row Echelon Form (RREF)
@@ -344,7 +361,7 @@ Matrix* gauss_jordan_elimination(Matrix* A) {
             continue;
         }
 
-        swap_rows(A, pivot, i);
+        swap_rows(R, pivot, i);
         pivot = i;
 
         // Divide the current row by the value at the pivot cell
@@ -369,4 +386,51 @@ Matrix* gauss_jordan_elimination(Matrix* A) {
     }
 
     return R;
+}
+
+/**
+ * @brief Compute the inverse of a matrix
+ * 
+ * @param A The matrix to invert. Must be nonsingular
+ * @return Matrix*
+ */
+Matrix* invert(Matrix* A) {
+    // We can check for non-singularity through two ways:
+    // 1. A must be square
+    // 2. A must have n pivots
+    // Source: https://textbooks.math.gatech.edu/ila/1553/invertible-matrix-thm.html
+
+    // Check for non-singularity: A must be square
+    if (A->rows != A->cols) {
+        fprintf(stderr, "A is not square\n");
+        return NULL;
+    }
+
+    size_t n = A->rows;
+
+    // Check for non-singularity: A's RREF must have non-zero rows
+    Matrix* R = gauss_jordan_elimination(A);
+    for (size_t i = 0; i < n; i++) {
+        if (is_close(R->data[i][i], 0.0)) {
+            fprintf(stderr, "A does not have n pivots\n");
+            return NULL;
+        }
+    }
+    free_matrix(R);
+
+    // Create an identity matrix to turn into the inverse
+    Matrix* A_inv = create_empty_matrix(n, n);
+    for (size_t i = 0; i < n; i++) {
+        A_inv->data[i][i] = 1.0;
+    }
+
+    // Copy A to not change it
+    Matrix* B = copy_matrix(A);
+
+    // We do not need a diagonal length, as we know our matrix is square
+    // We additionally do not need to check for non-square 
+    for (size_t i = 0; i < n; i++) {
+    }
+    free_matrix(B);
+    return A_inv;
 }

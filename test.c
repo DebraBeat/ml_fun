@@ -11,11 +11,6 @@
 
 int tests_run = 0;
 
-// Helper to compare doubles safely
-int is_close(double a, double b) {
-    return fabs(a - b) < 0.0001;
-}
-
 // --- 2. Helper for File I/O Tests ---
 // We create a temporary CSV file so we have something to read
 void create_temp_csv(const char* filename, const char* content) {
@@ -262,6 +257,17 @@ static char* test_matrix_product() {
     return NULL;
 }
 
+static char* test_swap_rows() {
+    Matrix* A = create_empty_matrix(2, 2);
+    A->data[0][0] = 1.0; A->data[0][1] = 0.0;
+    A->data[1][0] = 0.0; A->data[1][0] = 1.0;
+
+    swap_rows(A, 0, 1);
+
+    mu_assert("Swap did not happen", A->data[0][0] == 1.0 && A->data[0][1] == 0.0);
+
+    return NULL;
+}
 static char* test_gj_elimination() {
     // Upper Triangular Matrix
     Matrix* U = create_empty_matrix(3, 3);
@@ -341,6 +347,7 @@ static char* all_tests() {
     mu_run_test(test_matrix_vector_product);
     mu_run_test(test_mv_product_mismatch);
     mu_run_test(test_matrix_product);
+    mu_run_test(test_swap_rows);
     mu_run_test(test_gj_elimination);
     return NULL;
 }

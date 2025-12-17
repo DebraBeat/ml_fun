@@ -119,6 +119,24 @@ static char* test_create_matrix() {
     return NULL;
 }
 
+static char* test_copy_matrix() {
+    Matrix* A = create_matrix_from_file("my_matrix.csv");
+    Matrix *B = copy_matrix(A);
+    
+    for (size_t i = 0; i < A->rows; i++) {
+        for (size_t j = 0; j < A->cols; j++) {
+            mu_assert("Copy working incorrectly", A->data[i][j] == B->data[i][j]);
+        }
+    }
+
+    Matrix* C = NULL;
+
+    mu_assert("Tried to Copy NULL", copy_matrix(C) == NULL);
+
+    free(A);
+    free(B);
+    return NULL;
+}
 static char* test_matrix_transpose() {
     // 1. Setup 2x3 Matrix
     // [ 1.0, 2.0, 3.0 ]
@@ -243,6 +261,25 @@ static char* test_matrix_product() {
 
     return NULL;
 }
+
+static char* test_gj_elimination() {
+    // Upper Triangular Matrix
+    Matrix* U = create_empty_matrix(3, 3);
+    U->data[0][0] = 1.0; U->data[0][1] = 1.0; U->data[0][2] = 1.0;
+    U->data[1][0] = 0.0; U->data[1][1] = 1.0; U->data[1][2] = 1.0;
+    U->data[2][0] = 0.0; U->data[2][1] = 0.0; U->data[2][2] = 1.0;
+
+    Matrix* A = gauss_jordan_elimination(U);
+
+    mu_assert("Results index[0][1] is wrong", is_close(A->data[0][1], 0.0));
+    mu_assert("Results index[0][2] is wrong", is_close(A->data[0][1], 0.0));
+    mu_assert("Results index[1][2] is wrong", is_close(A->data[0][1], 0.0));
+
+    free(U);
+    if (A) free(A);
+
+    return NULL;
+}
 // --- 4. Test Runner ---
 
 static char* all_tests() {
@@ -252,11 +289,13 @@ static char* all_tests() {
     mu_run_test(test_csv_loading);
 
     mu_run_test(test_create_matrix);
+    mu_run_test(test_copy_matrix);
     mu_run_test(test_matrix_transpose);
     mu_run_test(test_matrix_csv_load);
     mu_run_test(test_matrix_vector_product);
     mu_run_test(test_mv_product_mismatch);
     mu_run_test(test_matrix_product);
+    mu_run_test(test_gj_elimination);
     return NULL;
 }
 

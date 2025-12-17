@@ -2,22 +2,17 @@
 #include "matrix.h"
 
 int main() {
-    Matrix* A = create_empty_matrix(1, 4);
-    A->data[0][0] = 0.0; A->data[0][1] = 1.0; A->data[0][2] = 1.0; A->data[0][3] = 3.0;
+    // Upper Triangular Matrix
+    Matrix* U = create_empty_matrix(3, 3);
+    U->data[0][0] = 1.0; U->data[0][1] = 1.0; U->data[0][2] = 1.0;
+    U->data[1][0] = 0.0; U->data[1][1] = 1.0; U->data[1][2] = 1.0;
+    U->data[2][0] = 0.0; U->data[2][1] = 0.0; U->data[2][2] = 1.0;
 
-    Matrix* B = create_empty_matrix(4, 1);
-    B->data[0][0] = 0.0;
-    B->data[1][0] = 1.0;
-    B->data[2][0] = 2.0;
-    B->data[3][0] = 3.0;
+    Matrix* A = gauss_jordan_elimination(U);
+    print_matrix(A);
 
-    Matrix* C = matrix_product(A, B);
+    free_matrix(U);
+    if (A) free_matrix(A);
 
-    print_matrix(C);
-    printf("row dim: %ld\n", C->rows);
-    printf("row dim: %ld\n", A->rows);
-
-    free_matrix(A);
-    free_matrix(B);
-    free_matrix(C);
+    return 0;
 }

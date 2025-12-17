@@ -56,6 +56,28 @@ Matrix* create_empty_matrix(size_t rows, size_t cols) {
 }
 
 /**
+ * @brief Return a copy of the given matrix
+ * 
+ * @param A The matrix to be copied
+ * @return *Matrix A reference to the copied matrix
+ */
+Matrix* copy_matrix(Matrix* A) {
+    if (A == NULL) {
+        fprintf(stderr, "The given matrix does not exist.");
+        return NULL;
+    }
+
+    Matrix* B = create_empty_matrix(A->rows, A->cols);
+    for (size_t i = 0; i < A->rows; i++) {
+        for (size_t j = 0; j < A->cols; j++) {
+            B->data[i][j] = A->data[i][j];
+        }
+    }
+
+    return B;
+
+}
+/**
  * @brief Free the memory a matrix is occupying
  * 
  * @param mat A pointer to the matrix
@@ -298,7 +320,7 @@ Matrix* matrix_product(Matrix* A, Matrix* B) {
  * @return Matrix*
  */
 Matrix* gauss_jordan_elimination(Matrix* A) {
-    Matrix* R = A;
+    Matrix* R = copy_matrix(A);
     size_t diagonal_len = MIN(R->rows, R->cols);
 
     // Work our way down the main diagonal. If the element in the current

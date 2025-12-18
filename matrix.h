@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
  
 #include "vector.h"
 
@@ -424,13 +425,37 @@ Matrix* invert(Matrix* A) {
         A_inv->data[i][i] = 1.0;
     }
 
+    // Every change to A must be made to B
     // Copy A to not change it
     Matrix* B = copy_matrix(A);
 
     // We do not need a diagonal length, as we know our matrix is square
-    // We additionally do not need to check for non-square 
+    // We additionally do not need to check for non-zero values on the main diagonal
     for (size_t i = 0; i < n; i++) {
+        
+        // Normalize our row, every element on the main diagonal should be value 1.0
+        // Apply the same to the inverse matrix
+        double pivot_val = B->data[i][i];
+        for (size_t j = 0; j < B->cols; j++) {
+            B->data[i][j] /= pivot_val;
+            A_inv->data[i][j] /= pivot_val;
+        }
+
+        // Starting at the top row, zero out every cell in the same column as
+        // our pivot cell and apply the zeroing out operation across the row.
+        // Of course if we're on the same row as our pivot, skip it.
+        for (size_t j = 0; j < B->cols; j++) {
+            if (j == i) continue;
+
+            // Get the factor for zeroing out a cell
+            double factor = B->data[j][i];
+            for (size_t k = 0; k < B->cols; k++) {
+                B->data[j][k] -= (factor * B->data[i][k]);
+                A_inv->data[j][k] -= (factor * A_inv->data[i][k]);
+            }
+        }
     }
+
     free_matrix(B);
     return A_inv;
 }

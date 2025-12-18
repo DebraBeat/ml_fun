@@ -11,7 +11,6 @@
 
 int tests_run = 0;
 
-// --- 2. Helper for File I/O Tests ---
 // We create a temporary CSV file so we have something to read
 void create_temp_csv(const char* filename, const char* content) {
     FILE* f = fopen(filename, "w");
@@ -21,7 +20,7 @@ void create_temp_csv(const char* filename, const char* content) {
     }
 }
 
-// --- 3. The Tests ---
+// The Tests ---
 
 static char* test_create_vector() {
     size_t rows = 5;
@@ -331,6 +330,10 @@ static char* test_gj_elimination() {
     if (B) free_matrix(B);
 
     return NULL;
+}
+
+static char* test_inverse() {
+
 }
 // --- 4. Test Runner ---
 

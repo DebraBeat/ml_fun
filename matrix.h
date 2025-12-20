@@ -36,7 +36,6 @@ int is_close(double a, double b) {
     return fabs(a - b) < 0.0001;
 }
 
-
 /**
  * @brief Create a matrix of size rows by columns
  * 
@@ -84,6 +83,7 @@ Matrix* copy_matrix(Matrix* A) {
     return B;
 
 }
+
 /**
  * @brief Free the memory a matrix is occupying
  * 
@@ -398,26 +398,13 @@ Matrix* gauss_jordan_elimination(Matrix* A) {
 Matrix* invert(Matrix* A) {
     // We can check for non-singularity through two ways:
     // 1. A must be square
-    // 2. A must have n pivots
-    // Source: https://textbooks.math.gatech.edu/ila/1553/invertible-matrix-thm.html
 
-    // Check for non-singularity: A must be square
     if (A->rows != A->cols) {
         fprintf(stderr, "A is not square\n");
         return NULL;
     }
 
     size_t n = A->rows;
-
-    // Check for non-singularity: A's RREF must have non-zero rows
-    Matrix* R = gauss_jordan_elimination(A);
-    for (size_t i = 0; i < n; i++) {
-        if (is_close(R->data[i][i], 0.0)) {
-            fprintf(stderr, "A does not have n pivots\n");
-            return NULL;
-        }
-    }
-    free_matrix(R);
 
     // Create an identity matrix to turn into the inverse
     Matrix* A_inv = create_empty_matrix(n, n);
@@ -430,8 +417,19 @@ Matrix* invert(Matrix* A) {
     Matrix* B = copy_matrix(A);
 
     // We do not need a diagonal length, as we know our matrix is square
-    // We additionally do not need to check for non-zero values on the main diagonal
     for (size_t i = 0; i < n; i++) {
+        size_t pivot = i;
+        while (pivot < n && A->data[pivot][i] == 0) {
+            pivot++;
+        }
+
+        if (pivot == n) {
+            continue;
+        }
+
+        swap_rows(B, i, pivot);
+        swap_rows(A_inv, i, pivot);
+        pivot = i;
         
         // Normalize our row, every element on the main diagonal should be value 1.0
         // Apply the same to the inverse matrix

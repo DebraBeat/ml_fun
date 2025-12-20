@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h> 
+#include <stdbool.h>
 
 #include "matrix.h" 
 
@@ -20,6 +21,28 @@ void create_temp_csv(const char* filename, const char* content) {
     }
 }
 
+// Helper method for checking if a matrix is the identity
+bool is_identity(Matrix* A) {
+    if (A->rows != A->cols) return false;
+
+    size_t n = A->rows;
+
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < n; j++) {
+            // Check to see if we're on the main diagonal and value isn't one
+            if (i == j && !(is_close(A->data[i][j], 1.0))) {
+                return false;
+            }
+
+            // Check to see if we're off the main diagonal and value isn't zero
+            if (i != j && !(is_close(A->data[i][j], 0.0))) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
 // The Tests ---
 
 static char* test_create_vector() {
@@ -333,7 +356,30 @@ static char* test_gj_elimination() {
 }
 
 static char* test_inverse() {
+    Matrix* A = create_empty_matrix(2,2);
+    A->data[0][0] = 1.0; A->data[0][1] = 2.0;
+    A->data[1][0] = 3.0; A->data[1][1] = 4.0;
 
+    Matrix* A_inv = invert(A);
+
+    Matrix* P = matrix_product(A, A_inv);
+
+    mu_assert("Matrix times inverse is not identity matrix", is_identity(P));
+
+    Matrix* I = create_empty_matrix(2,2);
+    I->data[0][0] = 1.0; I->data[0][1] = 0.0;
+    I->data[1][0] = 0.0; I->data[1][1] = 1.0;
+
+    Matrix* I_inv = invert(I);
+
+    mu_assert("Matrix should be identity", is_identity(I));
+    mu_assert("Matrix should be identity", is_identity(I_inv));
+
+    free_matrix(A);
+    free_matrix(I);
+    free_matrix(A_inv);
+    free_matrix(P);
+    return 0;
 }
 // --- 4. Test Runner ---
 
@@ -352,6 +398,7 @@ static char* all_tests() {
     mu_run_test(test_matrix_product);
     mu_run_test(test_swap_rows);
     mu_run_test(test_gj_elimination);
+    mu_run_test(test_inverse);
     return NULL;
 }
 

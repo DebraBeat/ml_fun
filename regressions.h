@@ -23,7 +23,7 @@ Vector* ols(Matrix* A, Vector* b) {
     // Test to make sure A has full column rank
     Matrix* R = gauss_jordan_elimination(A);
     for(size_t i = 0; i < MIN(rows, cols); i++) {
-        if (R->data[i][i] == 0) {
+        if (fabs(R->data[i][i]) < 1e-9) {
             fprintf(stderr, "A does not have full column rank.\n");
             return NULL;
         }

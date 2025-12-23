@@ -9,7 +9,7 @@
  * @brief Compute the Ordinary Least Squares Regression
  * 
  * @param A An m x n matrix of observations
- * @param b An m x 1 vector of target observattions
+ * @param b An m x 1 vector of target observations
  * 
  * @return Vector* x_hat, an m x 1 vector
  * @note The caller is reponsible for freeing this memory using free_vector()
@@ -19,7 +19,6 @@
 Vector* ols(Matrix* A, Vector* b) {
     size_t rows = A->rows;
     size_t cols = A->cols;
-    Vector* x_hat = create_empty_vector(rows);
 
     // Test to make sure A has full column rank
     Matrix* R = gauss_jordan_elimination(A);

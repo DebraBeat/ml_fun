@@ -3,7 +3,7 @@
 #include <math.h> 
 #include <stdbool.h>
 
-#include "matrix.h" 
+#include "regressions.h" 
 
 // Mini Unit Testing Framework
 #define mu_assert(message, test) do { if (!(test)) return message; } while (0)

@@ -382,7 +382,6 @@ static char* test_inverse() {
     return 0;
 }
 // --- 4. Test Runner ---
-
 static char* all_tests() {
     mu_run_test(test_create_vector);
     mu_run_test(test_dot_product_math);

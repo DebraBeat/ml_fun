@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define SIZE 1000
+#define SIZE 100
 #define MATRIX_FILE_NAME "full_rank_matrix.csv"
 #define VECTOR_FILE_NAME "target_vector.csv"
 

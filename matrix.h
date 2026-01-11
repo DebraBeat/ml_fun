@@ -5,7 +5,7 @@
  
 #include "vector.h"
 
-#define MAX_LINE_LENGTH 1024
+#define MAX_LINE_LENGTH 32768
 #define MIN(a,b) (a < b ? (a) : (b))
 
 /** TODO:
@@ -242,11 +242,15 @@ Matrix* tranpose_matrix(Matrix* mat) {
 
     Matrix* tranpose = create_empty_matrix(t_rows, t_cols);
 
+    printf("Performing matrix transponse...\n");
+
     for (size_t i = 0; i < mat->cols; i++) {
         for (size_t j = 0; j < mat->rows; j++) {
             tranpose->data[i][j] = mat->data[j][i];
         }
     }
+
+    printf("Done\n");
 
     return tranpose;
 }
@@ -267,6 +271,8 @@ Vector* matrix_vector_product(Matrix* A, Vector* x) {
         return NULL;
     }
 
+    printf("Performing matrix-vector product...\n");
+
     // Number of rows for the new vector
     size_t v_rows = A->rows;
     
@@ -277,6 +283,7 @@ Vector* matrix_vector_product(Matrix* A, Vector* x) {
             b->data[i] += (A->data[i][j] * x->data[j]);
         }
     }
+    printf("done\n");
 
     return b;
 }
@@ -302,6 +309,8 @@ Matrix* matrix_product(Matrix* A, Matrix* B) {
     Matrix* C = create_empty_matrix(A->rows, B->cols);
     if (C == NULL) return NULL;
     
+    printf("Performing matrix product...\n");
+    
     for (size_t i = 0; i < A->rows; i++) {
         for (size_t j = 0; j < B->cols; j++) {
             double sum = 0.0;
@@ -313,6 +322,8 @@ Matrix* matrix_product(Matrix* A, Matrix* B) {
             C->data[i][j] = sum;
         }
     }
+
+    printf("Done\n");
     return C;
 }
 
@@ -348,6 +359,7 @@ void swap_rows(Matrix* A, size_t row_1, size_t row_2) {
 Matrix* gauss_jordan_elimination(Matrix* A) {
     Matrix* R = copy_matrix(A);
     size_t diagonal_len = MIN(R->rows, R->cols);
+    printf("Performing gauss-jordan elimination...\n");
 
     // Work our way down the main diagonal. If the element in the current
     // main diagonal is 0, increase pivot to check the one below it
@@ -387,6 +399,7 @@ Matrix* gauss_jordan_elimination(Matrix* A) {
         }
     }
 
+    printf("Done\n");
     return R;
 }
 
@@ -416,6 +429,8 @@ Matrix* invert(Matrix* A) {
     // Every change to A must be made to B
     // Copy A to not change it
     Matrix* B = copy_matrix(A);
+
+    printf("Performing Matrix inversion...\n");
 
     // We do not need a diagonal length, as we know our matrix is square
     for (size_t i = 0; i < n; i++) {
@@ -455,6 +470,7 @@ Matrix* invert(Matrix* A) {
         }
     }
 
+    printf("Done\n");
     free_matrix(B);
     return A_inv;
 }

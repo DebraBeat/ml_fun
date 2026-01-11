@@ -8,7 +8,7 @@ This project is a learning exercise in machine learning and the C language. Curr
 
 # Running this project
 To run this project, do the following:
-* `make all`
 * `make generate`
 * `./generate`
+* `make all`
 * `./ml_app full_rank_matrix.csv target_vector.csv`

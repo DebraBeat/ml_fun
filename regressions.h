@@ -30,6 +30,8 @@ Vector* ols(Matrix* A, Vector* b) {
     }
     free_matrix(R);
 
+    printf("Performing OLS...\n");
+
     // Calculate OLS via Moore-Penrose pseudo-inverse
     Matrix* At = tranpose_matrix(A);
     Matrix* AtA = matrix_product(At, A);
@@ -42,5 +44,6 @@ Vector* ols(Matrix* A, Vector* b) {
     free_matrix(AtA);
     free_matrix(At);
 
+    printf("Done\n");
     return x_hat;
 }

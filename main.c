@@ -1,21 +1,15 @@
 #include <stdio.h>
-#include "matrix.h"
+#include "regressions.h"
 
-int main() {
-    // Upper Triangular Matrix
-    Matrix* A = create_empty_matrix(2,2);
-    A->data[0][0] = 1.0; A->data[0][1] = 0.0;
-    A->data[1][0] = 0.0; A->data[1][1] = 1.0;
-    print_matrix(A);
+int main(int argc, char* argv[]) {
+    Matrix* X = create_matrix_from_file(argv[0]);
+    Vector* y = create_vector_from_file(argv[1]);
+    Vector* b_hat = ols(X, y);
 
-    Matrix* A_inv = invert(A);
-    print_matrix(A_inv);
-
-    Matrix* P = matrix_product(A, A_inv);
-    print_matrix(P);
-
-    free_matrix(A);
-    free_matrix(A_inv);
-    free_matrix(P);
+    printf("The ordinary least squares regression is: ");
+    print_vector(b_hat);
+    free_matrix(X);
+    free_vector(y);
+    free_vector(b_hat);
     return 0;
 }

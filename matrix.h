@@ -14,8 +14,9 @@
 * DONE: Matrix-Vector product
 * DONE: Matrix-Matrix product
 * DONE: Gaussian Elimination
-* Inverse
-* Pseudoinverse
+* DONE: Inverse
+* DONE: Pseudoinverse
+* Get target feature
 * QR decomposition
 * Eigen decomposition
 * SVD

@@ -10,7 +10,7 @@ This project is a learning exercise in machine learning and the C language. Curr
 ## Files related to testing and generating code
 - In `test.c`, unit tests for the vector and matrix methods are defined and driven.
 - In `generator.c`, csv files for a full rank matrix and corresponding target vector are created.
-    - The target vector corresponds to the matrix as being the sum of the matrix's rows. That is given a matrix $X$ and vector $b$ where every $b_i \in b = 1$, the target vector is $Xb$
+    - The target vector corresponds to the matrix as being the sum of the matrix's rows. That is given a matrix $X$ and vector $\vec{b}$ where every $b_i \in \vec{b} = 1$, the target vector is $X\vec{b}$
 
 # Running this project
 To run this project with a generated matrix, do the following:

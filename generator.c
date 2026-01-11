@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define SIZE 100
 #define MATRIX_FILE_NAME "full_rank_matrix.csv"
 #define VECTOR_FILE_NAME "target_vector.csv"
 
@@ -34,12 +33,14 @@
  * 
  * @return int
  */
-int main() {
+int main(int argc, char* argv[]) {
     FILE *matrix_fp;
     FILE *vector_fp;
     int i, j;
     double matrix_val;
     double vector_val;
+    int rows = atoi(argv[1]);
+    int cols = atoi(argv[2]);
 
     srand(time(NULL));
 
@@ -55,23 +56,24 @@ int main() {
         return 1;
     }
 
-    printf("Generating a %d by %d matrix...", SIZE, SIZE);
+    printf("Generating a %d by %d matrix...\n", rows, cols);
+    printf("Generating a %d vector...", rows);
 
-    for (i = 0; i < SIZE; i++) {
+    for (i = 0; i < rows; i++) {
         vector_val = 0.0;
 
-        for (j = 0; j < SIZE; j++) {
+        for (j = 0; j < cols; j++) {
             matrix_val = (double)rand() / RAND_MAX; // Get a random double between [0.0, 1.0]
 
             // Diagonal Dominance implementation
             if (i == j) {
-                matrix_val += (double)SIZE;
+                matrix_val += (double)rows;
             }
 
             fprintf(matrix_fp, "%f", matrix_val);
             vector_val += matrix_val;
 
-            if (j < SIZE - 1) {
+            if (j < cols - 1) {
                 fprintf(matrix_fp, ",");
             }
         }
@@ -79,7 +81,7 @@ int main() {
         fprintf(matrix_fp, "\n");
         
         fprintf(vector_fp, "%f", vector_val);
-        if (i < SIZE - 1) {
+        if (i < rows - 1) {
             fprintf(vector_fp, ",");
         }
     }

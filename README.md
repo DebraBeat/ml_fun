@@ -12,7 +12,7 @@ This project is a learning exercise in machine learning and the C language. Curr
 - In `generator.c`, csv files for a full rank matrix and corresponding target vector are created.
     - The target vector corresponds to the matrix as being the sum of the matrix's rows. That is given a matrix $X$ and vector $\vec{b}$ where every $b_i \in \vec{b} = 1$, the target vector is $X\vec{b}$
 
-# Running this project
+## Running this project
 To run this project with a generated matrix, do the following:
 - `make all`
 - `./ml_app full_rank_matrix.csv target_vector.csv`

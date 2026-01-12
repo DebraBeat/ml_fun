@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
     int i, j;
     double matrix_val;
     double vector_val;
+    double  noise_term;
     int rows = atoi(argv[1]);
     int cols = atoi(argv[2]);
 
@@ -57,7 +58,7 @@ int main(int argc, char* argv[]) {
     }
 
     printf("Generating a %d by %d matrix...\n", rows, cols);
-    printf("Generating a %d vector...", rows);
+    printf("Generating a %d vector...\n", rows);
 
     for (i = 0; i < rows; i++) {
         vector_val = 0.0;
@@ -80,6 +81,8 @@ int main(int argc, char* argv[]) {
 
         fprintf(matrix_fp, "\n");
         
+        noise_term = (double)rand() / (100.0 * RAND_MAX); // Add noise into the matrix and vector
+        vector_val += noise_term;
         fprintf(vector_fp, "%f", vector_val);
         if (i < rows - 1) {
             fprintf(vector_fp, ",");

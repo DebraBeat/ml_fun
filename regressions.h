@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <math.h>
 
 #include "matrix.h"
 
@@ -46,4 +47,75 @@ Vector* ols(Matrix* A, Vector* b) {
 
     printf("Done\n");
     return x_hat;
+}
+
+/** @brief Compute the Standard Squared Error
+ * 
+ * Compute the SSE of two vectors. Store result in a passed double, return
+ * type indicates success
+ * 
+ * @return int
+ */
+int sse(Vector* y, Vector* y_hat, double* result) {
+    if (y->rows != y_hat->rows) {
+        perror("Vectors are of two different sizes.\n");
+        return EXIT_FAILURE;
+    }
+
+    size_t rows = y->rows;
+    *result = 0.0;
+    
+    for (size_t i = 0; i < rows; i++) {
+        double diff = y->data[i] - y_hat->data[i];
+        *result += (diff * diff);
+    }
+
+    return EXIT_SUCCESS;
+}
+
+/** @brief Compute the Standard Squared Error
+ * 
+ * Compute the SSE of two vectors. Store result in a passed double, return
+ * type indicates success
+ * 
+ * @return int
+ */
+int mse(Vector* y, Vector* y_hat, double* result) {
+    if (y->rows != y_hat->rows) {
+        perror("Vectors are of two different sizes.\n");
+        return EXIT_FAILURE;
+    }
+
+    size_t rows = y->rows;
+    sse(y, y_hat, result);
+
+    *result = *result / (double)rows;
+
+    return EXIT_SUCCESS;
+    
+}
+
+/** @brief Compute the Mean Absolute error
+ * 
+ * Compute the MAE of two vectors. Store the result in passed double, return
+ * type indicates success
+ * 
+ * @return int
+*/
+ int mae(Vector* y, Vector* y_hat, double* result) {
+    if (y->rows != y_hat->rows) {
+        perror("Vectors are of two different sizes.\n");
+        return EXIT_FAILURE;
+    }
+
+    *result = 0.0;
+
+    for (size_t i = 0; i < y->rows; i++) {
+        *result += fabs(y->data[i] - y_hat->data[i]);
+    }
+
+    *result = *result / (double)y->rows;
+
+    return EXIT_SUCCESS;
+
 }

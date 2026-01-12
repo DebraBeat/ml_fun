@@ -23,7 +23,7 @@ $(TEST_NAME): $(TEST_SRC) $(HEADERS)
 	$(CC) $(CFLAGS) -o $(TEST_NAME) $(TEST_SRC)
 	@echo "Test build successful"
 
-generate: $(GENERATOR_NAME)
+gen: $(GENERATOR_NAME)
 
 $(GENERATOR_NAME): $(GENERATOR_SRC)
 	$(CC) $(CFLAGS) -o $(GENERATOR_NAME) $(GENERATOR_SRC)
